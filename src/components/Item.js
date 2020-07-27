@@ -1,31 +1,40 @@
-import React from "react";
+import React, { createRef, useEffect } from "react";
 import styled from "styled-components";
 
-const Item = ({
-  index,
-  name,
-  cost,
-  value,
-  numOwned,
-  handleAttemptedPurchase,
-}) => {
-  const ref = React.useRef(null);
+function Item({ id, name, cost, value, clicker, cookieCount, setCookieCount,
+                purchasedItems, setPurchasedItems }) {
 
-  React.useEffect(() => {
-    if (index === 0) {
-      ref.current.focus();
+  const amountPurchased = purchasedItems[id];
+  const focusItem = createRef();
+
+  const handleClick = (id) => {
+    if (cookieCount >= cost) {
+      setPurchasedItems({
+        ...purchasedItems,
+        [id]: purchasedItems[id] + 1
+      });
+
+      setCookieCount(cookieCount - cost);
     }
-  }, [index]);
+  }
+
+  useEffect(() => {
+    if (id === 'cursor') {
+      focusItem.current.focus();
+    }
+  }, []);
 
   return (
-    <Wrapper ref={ref} onClick={handleAttemptedPurchase}>
+    <Wrapper ref={focusItem} onClick={() => handleClick(id)}>
       <Left>
         <Name>{name}</Name>
         <Info>
-          Cost: {cost} cookie(s). Produces {value} cookies/second.
+          Cost: {cost} cookie{cost > 1 ? 's' : ''}.
+          Produces {value} cookie{value > 1 ? 's' : ''}
+          {''} / {clicker ? 'click' : 'second'}.
         </Info>
       </Left>
-      <Right>{numOwned}</Right>
+      <Right>{amountPurchased}</Right>
     </Wrapper>
   );
 };
