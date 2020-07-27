@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import usePersistedState from '../hooks/usePersistedState.hook';
+import useInterval from "../hooks/use-interval.hook";
 
 import { items } from '../data';
 
@@ -20,7 +21,8 @@ export const GameContext = React.createContext(null);
 
 export const GameProvider = ({ children }) => {
   const [cookieCount, setCookieCount] = usePersistedState('cookieCount', 1000);
-  const [purchasedItems, setPurchasedItems] = useState(initialPurchased);
+  const [purchasedItems, setPurchasedItems] = usePersistedState('purchased', initialPurchased);
+  const [previousTime, setPreviousTime] = usePersistedState('currentTime', new Date().getTime());
 
   const incrementCookies = () => {
     const clickValue = calculatePowerUps(purchasedItems, true);
@@ -29,6 +31,23 @@ export const GameProvider = ({ children }) => {
 
     setCookieCount(cookieCount + cookieCountIncrement);
   }
+
+  useInterval(() => {
+    const generatedCookies = calculatePowerUps(purchasedItems);
+
+    if (generatedCookies > 0) setPreviousTime(new Date().getTime());
+
+    setCookieCount(cookieCount + generatedCookies)
+  }, 1000);
+
+  useEffect(() => {
+    const generatedCookies = calculatePowerUps(purchasedItems);
+    const timeElapsed = new Date().getTime() - previousTime;
+    const timeElapsedSeconds = Math.ceil(timeElapsed / 1000);
+    const cookiesWhileAway = generatedCookies * timeElapsedSeconds;
+
+    setCookieCount(cookieCount + cookiesWhileAway);
+  }, []);
 
   return (
     <GameContext.Provider
@@ -43,6 +62,5 @@ export const GameProvider = ({ children }) => {
     >
       {children}
     </GameContext.Provider>
-
   );
 };

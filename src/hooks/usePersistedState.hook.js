@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function usePersistedState(key, initialValue) {
   const [storedValue, setStoredValue] =
@@ -7,13 +7,11 @@ function usePersistedState(key, initialValue) {
       return currentItem ? JSON.parse(currentItem) : initialValue;
     });
 
-  const setValue = newValue => {
-    setStoredValue(newValue);
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(storedValue));
+  }, [storedValue]);
 
-    window.localStorage.setItem(key, JSON.stringify(newValue));
-  }
-
-  return [storedValue, setValue];
+  return [storedValue, setStoredValue];
 }
 
 export default usePersistedState;
