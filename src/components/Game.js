@@ -3,38 +3,21 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import cookieSrc from "../cookie.svg";
-import Item from "./Item";
 
-import useInterval from "../hooks/use-interval.hook";
 import useKeydown from '../hooks/useKeydown.hook';
 import useDocumentTitle from '../hooks/useDocumentTitle.hook';
 import { items } from '../data';
+import Item from './Item';
 import { GameContext } from './GameContext';
 
-const calculatePowerUps = (purchasedItems, clicker = false) => {
-  return items.reduce((cookiesPerTick, item) => {
-    if (item.clicker === clicker) {
-      return cookiesPerTick += item.value * purchasedItems[item.id];
-    } else return cookiesPerTick;
-  }, 0);
-};
-
 function Game() {
-  const { cookieCount, setCookieCount, purchasedItems } = useContext(GameContext);
-
-  const incrementCookies = () => {
-    const clickValue = calculatePowerUps(purchasedItems, true);
-    const defaultValue = 1;
-    const cookieCountIncrement = clickValue > 0 ? clickValue : defaultValue;
-
-    setCookieCount(cookieCount + cookieCountIncrement);
-  }
-
-  useInterval(() => {
-    const generatedCookies = calculatePowerUps(purchasedItems);
-
-    setCookieCount(cookieCount + generatedCookies)
-  }, 1000);
+  const {
+    cookieCount,
+    setCookieCount,
+    purchasedItems,
+    incrementCookies,
+    calculatePowerUps
+  } = useContext(GameContext);
 
   useKeydown(() => setCookieCount(cookieCount + 1), 'Space');
   useDocumentTitle(`${cookieCount} cookies - Cookie Clicker`, `Cookie Clicker`);
