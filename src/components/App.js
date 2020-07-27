@@ -1,38 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import GlobalStyles from "./GlobalStyles";
 import Home from "./Home";
 import Game from "./Game";
-import usePersistedState from '../hooks/usePersistedState.hook';
 
-import { items } from '../data';
+import { GameProvider } from './GameContext';
 
-const initialPurchased = items.reduce((purchasedItems, item) => {
-  purchasedItems[item.id] = 0;
-  return purchasedItems;
-}, {});
-
-function App(props) {
-  const [cookieCount, setCookieCount] = usePersistedState('cookieCount', 1000);
-  const [purchasedItems, setPurchasedItems] = useState(initialPurchased);
-
+function App() {
   return (
     <>
-      <GlobalStyles />
-      <Router>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route path="/game">
-          <Game
-            cookieCount={cookieCount}
-            setCookieCount={setCookieCount}
-            purchasedItems={purchasedItems}
-            setPurchasedItems={setPurchasedItems}
-          />
-        </Route>
-      </Router>
+      <GameProvider>
+        <GlobalStyles />
+        <Router>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/game">
+            <Game/>
+          </Route>
+        </Router>
+      </GameProvider>
     </>
   );
 }

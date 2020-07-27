@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -9,6 +9,7 @@ import useInterval from "../hooks/use-interval.hook";
 import useKeydown from '../hooks/useKeydown.hook';
 import useDocumentTitle from '../hooks/useDocumentTitle.hook';
 import { items } from '../data';
+import { GameContext } from './GameContext';
 
 const calculatePowerUps = (purchasedItems, clicker = false) => {
   return items.reduce((cookiesPerTick, item) => {
@@ -18,7 +19,9 @@ const calculatePowerUps = (purchasedItems, clicker = false) => {
   }, 0);
 };
 
-function Game({ cookieCount, setCookieCount, purchasedItems, setPurchasedItems }) {
+function Game() {
+  const { cookieCount, setCookieCount, purchasedItems } = useContext(GameContext);
+
   const incrementCookies = () => {
     const clickValue = calculatePowerUps(purchasedItems, true);
     const defaultValue = 1;
@@ -60,10 +63,6 @@ function Game({ cookieCount, setCookieCount, purchasedItems, setPurchasedItems }
               cost={item.cost}
               value={item.value}
               clicker={item.clicker}
-              cookieCount={cookieCount}
-              setCookieCount={setCookieCount}
-              purchasedItems={purchasedItems}
-              setPurchasedItems={setPurchasedItems}
             />
           );
         })}

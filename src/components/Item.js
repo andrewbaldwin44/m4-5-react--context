@@ -1,8 +1,10 @@
-import React, { createRef, useEffect } from "react";
+import React, { createRef, useEffect, useContext } from "react";
 import styled from "styled-components";
 
-function Item({ id, name, cost, value, clicker, cookieCount, setCookieCount,
-                purchasedItems, setPurchasedItems }) {
+import { GameContext } from './GameContext';
+
+function Item({ id, name, cost, value, clicker }) {
+  const { cookieCount, setCookieCount, purchasedItems, setPurchasedItems } = useContext(GameContext);
 
   const amountPurchased = purchasedItems[id];
   const focusItem = createRef();
