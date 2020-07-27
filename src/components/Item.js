@@ -49,6 +49,7 @@ const Wrapper = styled.button`
   color: #fff;
   text-align: left;
   padding: 15px 0;
+  cursor: pointer;
 `;
 
 const Left = styled.div`

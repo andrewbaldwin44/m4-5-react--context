@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function useKeydown(callback, code) {
   const handleKeyPress = key => {
@@ -7,7 +7,7 @@ function useKeydown(callback, code) {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
 
     return () => {

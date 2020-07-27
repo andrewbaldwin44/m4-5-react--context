@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function useDocumentTitle(title, fallbackTitle) {
-  React.useEffect(() => {
+  useEffect(() => {
     document.title = title
 
     return () => {
